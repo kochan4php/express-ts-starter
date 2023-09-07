@@ -1,0 +1,5 @@
+node_modules
+dist
+env/.env.local
+env/.env.production
+env/.env.staging

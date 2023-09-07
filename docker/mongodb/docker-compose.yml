@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+    mongodb:
+        container_name: mongodb
+        image: mongo:latest
+        restart: always
+        ports:
+            - 27017:27017
+        deploy:
+            resources:
+                limits:
+                    cpus: '0.50'
+                    memory: 512M
