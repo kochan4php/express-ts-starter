@@ -1,7 +1,7 @@
 {
-    "name": "server",
-    "version": "1.0.0",
-    "description": "Chatify Backend REST API",
+    "name": "express-ts-starter",
+    "version": "0.0.1",
+    "description": "Express.ts Server starter template",
     "main": "index.js",
     "scripts": {
         "dev": "nodemon -r dotenv/config src/index.ts",
@@ -10,7 +10,19 @@
         "lint": "eslint src/**/*.ts",
         "format": "eslint src/**/*.ts --fix"
     },
-    "keywords": [],
+    "keywords": [
+        "express",
+        "typescript",
+        "starter",
+        "template",
+        "starter-template",
+        "express.ts",
+        "expressjs",
+        "express.js",
+        "mongodb",
+        "mongoose",
+        "socket.io"
+    ],
     "author": "Deo Subarno",
     "license": "MIT",
     "devDependencies": {
