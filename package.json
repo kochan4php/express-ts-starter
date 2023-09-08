@@ -14,7 +14,8 @@
         "start:prod:local:win": "set NODE_ENV=production.local && node dist/index.js",
         "build": "tsc -p .",
         "lint": "eslint src/**/*.ts",
-        "lint:fix": "eslint src/**/*.ts --fix"
+        "lint:fix": "eslint src/**/*.ts --fix",
+        "create-env": "node create-env.js"
     },
     "keywords": [
         "express",
