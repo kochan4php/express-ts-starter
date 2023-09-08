@@ -4,7 +4,7 @@
  */
 
 import dotenv from 'dotenv';
-dotenv.config({ path: './env/.env.local' }); // Change this to your .env file path from env folder
+dotenv.config({ path: `./env/.env.${process.env.NODE_ENV}` });
 
 export const PORT = Number(process.env.PORT) || 3000;
 export const MONGO_URI = process.env.MONGO_URI as string;
