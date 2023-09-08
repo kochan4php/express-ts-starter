@@ -4,13 +4,22 @@
  */
 
 /* eslint-disable @typescript-eslint/no-var-requires */
-const fs = require('fs');
+const { existsSync, mkdirSync, readFileSync } = require('fs');
+const { writeFile } = require('fs/promises');
+const clc = require('cli-color');
 
-const envExample = fs.readFileSync('./env/.env.example', 'utf8');
+const envExample = readFileSync('./env/.env.example', 'utf8');
 const environments = ['local', 'staging', 'production', 'production.local'];
 
-environments.forEach((environment) => {
-    if (!fs.existsSync(`./env`)) fs.mkdirSync(`./env`);
-    fs.writeFileSync(`./env/.env.${environment}`, envExample);
-    console.log(`.env.${environment} file created successfully!`);
+environments.forEach(async (environment) => {
+    if (!existsSync('./env-test')) mkdirSync('./env-test');
+
+    try {
+        await writeFile(`./env-test/.env.${environment}`, envExample);
+        console.log(clc.green(`.env.${environment} file created successfully! ✅`));
+    } catch (err) {
+        console.log(clc.red('Something went wrong. ❌'));
+        console.log(clc.cyan('Please contact the owner of this template! ❕'));
+        process.exit(1);
+    }
 });
