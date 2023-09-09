@@ -35,9 +35,10 @@ async function register(req: Request, res: Response): Promise<Response> {
         const hashPassword = await hash(password);
         const data = { name, phoneNumber, email, password: hashPassword };
         const newUser: User = await UserService.createUser(data);
+        const getNewUserWithoutPassword: User | null = await UserService.getOneUser({ email: newUser.email });
 
         const message = 'Register success';
-        return resSuccess(res, 201, message, { newUser });
+        return resSuccess(res, 201, message, { user: getNewUserWithoutPassword });
     } catch (error: any) {
         logger.error(register.name, error.message);
         return resFailed(res, 500, error.message);
