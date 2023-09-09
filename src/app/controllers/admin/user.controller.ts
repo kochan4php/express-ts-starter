@@ -5,6 +5,7 @@
  */
 
 import { Request, Response } from 'express';
+import { logger } from '../../../logger';
 import { hash } from '../../helpers/hash.helper';
 import { resFailed, resSuccess } from '../../helpers/response.helper';
 import { User } from '../../models/user.model';
@@ -28,6 +29,7 @@ async function getAllUsers(_: Request, res: Response): Promise<Response> {
         const message: string = 'Success get all users';
         return resSuccess(res, 200, message, { users });
     } catch (error: any) {
+        logger.error(getAllUsers.name, error.message);
         return resFailed(res, 500, error.message);
     }
 }
@@ -51,6 +53,7 @@ async function getUserById(req: Request, res: Response): Promise<Response> {
         const message: string = 'Success get user by id';
         return resSuccess(res, 200, message, { user });
     } catch (error: any) {
+        logger.error(getUserById.name, error.message);
         return resFailed(res, 500, error.message);
     }
 }
@@ -78,6 +81,7 @@ async function createUser(req: Request, res: Response): Promise<Response> {
         const message: string = 'Success create new user';
         return resSuccess(res, 201, message, { user });
     } catch (error: any) {
+        logger.error(createUser.name, error.message);
         return resFailed(res, 500, error.message);
     }
 }
@@ -105,6 +109,7 @@ async function updateUserById(req: Request, res: Response): Promise<Response> {
         const message: string = 'Success update user by id';
         return resSuccess(res, 200, message, { user });
     } catch (error: any) {
+        logger.error(updateUserById.name, error.message);
         return resFailed(res, 500, error.message);
     }
 }
@@ -132,6 +137,7 @@ async function deleteUserById(req: Request, res: Response): Promise<Response> {
         const message: string = 'Success delete user by id';
         return resSuccess(res, 200, message);
     } catch (error: any) {
+        logger.error(deleteUserById.name, error.message);
         return resFailed(res, 500, error.message);
     }
 }

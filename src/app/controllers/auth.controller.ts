@@ -14,6 +14,7 @@ import { resFailed, resSuccess } from '../helpers';
 import { User } from '../models/user.model';
 import SessionService from '../services/session.service';
 import UserService from '../services/user.service';
+import { logger } from '../../logger';
 
 /**
  * @description Register new user
@@ -38,6 +39,7 @@ async function register(req: Request, res: Response): Promise<Response> {
         const message = 'Register success';
         return resSuccess(res, 201, message, { newUser });
     } catch (error: any) {
+        logger.error(register.name, error.message);
         return resFailed(res, 500, error.message);
     }
 }
@@ -86,6 +88,7 @@ async function login(req: Request, res: Response): Promise<Response> {
         const message = 'Login success';
         return resSuccess(res, 200, message, { accessToken, refreshToken });
     } catch (error: any) {
+        logger.error(login.name, error.message);
         return resFailed(res, 500, error.message);
     }
 }
@@ -157,6 +160,7 @@ async function refreshToken(req: Request, res: Response): Promise<Response> {
         const message = 'Refresh the token success';
         return resSuccess(res, 200, message, { accessToken, refreshToken });
     } catch (error: any) {
+        logger.error(refreshToken.name, error.message);
         return resFailed(res, 500, error.message);
     }
 }
@@ -213,6 +217,7 @@ async function logout(req: Request, res: Response): Promise<Response> {
         const message = 'Logout success';
         return resSuccess(res, 200, message);
     } catch (error: any) {
+        logger.error(logout.name, error.message);
         return resFailed(res, 500, error.message);
     }
 }

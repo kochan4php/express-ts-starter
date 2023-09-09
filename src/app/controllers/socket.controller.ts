@@ -6,6 +6,7 @@
 
 import { Server, Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
+import { logger } from '../../logger';
 
 /**
  * @description Handle socket connection
@@ -14,9 +15,9 @@ import { DefaultEventsMap } from 'socket.io/dist/typed-events';
  * @returns {void} - Void
  */
 export default function SocketController(socket: Socket<DefaultEventsMap>, io: Server<DefaultEventsMap>): void {
-    console.log(`Client connected: ${socket.id}`);
+    logger.info('Client', `connected: ${socket.id}`);
 
     socket.on('disconnect', () => {
-        console.log(`Client disconnected: ${socket.id}`);
+        logger.info('Client', `disconnected: ${socket.id}`);
     });
 }

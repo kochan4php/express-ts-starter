@@ -3,8 +3,9 @@
  * @author {Deo Sbrn}
  */
 
-import mongoose from "mongoose";
-import { MONGO_URI } from "./env";
+import mongoose from 'mongoose';
+import { MONGO_URI } from './env';
+import { logger } from '../logger';
 
 /**
  * @description Connect to MongoDB Database
@@ -15,14 +16,14 @@ export default async function database(): Promise<void> {
         try {
             const conn = await mongoose.connect(MONGO_URI);
             const message = `MongoDB Connected: ${conn.connection.host}:${conn.connection.port}`;
-            console.log(message);
-        } catch (error) {
-            console.error("Error connecting to database: ", error);
+            logger.info('Database', message);
+        } catch (error: any) {
+            logger.error('Database', error.message);
             return process.exit(1);
         }
     };
 
     await connect();
 
-    mongoose.connection.on("disconnected", connect);
+    mongoose.connection.on('disconnected', connect);
 }

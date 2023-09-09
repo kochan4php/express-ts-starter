@@ -12,13 +12,14 @@ import init from './app';
 import SocketController from './app/controllers/socket.controller';
 import { socketConfig } from './config/app';
 import { PORT } from './config/env';
+import { logger } from './logger';
 
 /**
  * Bootstrap the application
  */
 (async function () {
     const app: Application = init();
-    const server = app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+    const server = app.listen(PORT, () => logger.info('Server', `started on port ${PORT}`));
     const io: Server<DefaultEventsMap> = new Server(server, socketConfig());
     io.on('connection', (socket: Socket<DefaultEventsMap>) => SocketController(socket, io));
 })();
