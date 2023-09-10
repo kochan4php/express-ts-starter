@@ -7,6 +7,7 @@ import { NextFunction, Response } from 'express';
 import IRequest from '../../interfaces/i-request';
 import { getUserPayloadFromAccessToken, verifyAccessToken } from '../../jwt/helpers/access-token.helper';
 import { resFailed } from '../helpers/response.helper';
+import { logger } from '../../logger';
 
 /**
  * Middleware to check if user is authenticated
@@ -30,9 +31,11 @@ export default async function auth(req: IRequest, res: Response, next: NextFunct
             next();
             return;
         } catch (error: any) {
+            logger.error(auth.name, error.message);
             return resFailed(res, 401, 'Token invalid');
         }
     } catch (error: any) {
+        logger.error(auth.name, error.message);
         return resFailed(res, 401, 'Unauthorized');
     }
 }
