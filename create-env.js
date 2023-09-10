@@ -12,10 +12,10 @@ const envExample = readFileSync('./env/.env.example', 'utf8');
 const environments = ['local', 'staging', 'production', 'production.local'];
 
 environments.forEach(async (environment) => {
-    if (!existsSync('./env-test')) mkdirSync('./env-test');
+    if (!existsSync('./env')) mkdirSync('./env');
 
     try {
-        await writeFile(`./env-test/.env.${environment}`, envExample);
+        await writeFile(`./env/.env.${environment}`, envExample);
         console.log(clc.green(`.env.${environment} file created successfully! ✅`));
     } catch (err) {
         console.log(clc.red('Something went wrong. ❌'));
