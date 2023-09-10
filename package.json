@@ -31,7 +31,7 @@
         "socket.io"
     ],
     "author": "Deo Subarno",
-    "license": "MIT",
+    "license": "Apache-2.0",
     "devDependencies": {
         "@types/bcrypt": "^5.0.0",
         "@types/cookie-parser": "^1.4.4",
