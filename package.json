@@ -15,7 +15,8 @@
         "build": "tsc -p .",
         "lint": "eslint src/**/*.ts",
         "lint:fix": "eslint src/**/*.ts --fix",
-        "create-env": "node create-env.js"
+        "create-env": "node create-env.js",
+        "prepare": "husky install"
     },
     "keywords": [
         "express",
