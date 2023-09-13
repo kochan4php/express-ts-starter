@@ -16,7 +16,8 @@
         "lint": "eslint src/**/*.ts",
         "lint:fix": "eslint src/**/*.ts --fix",
         "create-env": "node create-env.js",
-        "prepare": "husky install"
+        "prepare": "husky install",
+        "setup-project": "npm i -g pnpm && pnpm i && pnpm up --latest && pnpm create-env"
     },
     "keywords": [
         "express",
