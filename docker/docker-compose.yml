@@ -9,6 +9,8 @@ services:
         restart: always
         ports:
             - 27017:27017
+        volumes:
+            - mongo-data:/data/db
         environment:
             MONGO_INITDB_ROOT_USERNAME: admin
             MONGO_INITDB_ROOT_PASSWORD: admin
@@ -37,3 +39,7 @@ services:
                 limits:
                     cpus: '0.50'
                     memory: 512M
+
+volumes:
+    mongo-data:
+        name: mongo-data
