@@ -5,12 +5,12 @@ services:
         container_name: server-app
         build:
             context: .
-            dockerfile: ./dockerfiles/Dockerfile.prod
+            dockerfile: ./dockerfiles/production/Dockerfile
         image: express_ts_starter:latest
         restart: always
         ports:
             - 8000:8000
-        env_file: ./env/.env.local
+        env_file: ./env/.env.production.local
         environment:
             PORT: 8000
             MONGO_URI: mongodb://mongodb:27017/db_express_ts

@@ -17,6 +17,7 @@ ENV NODE_ENV=production
 WORKDIR /usr/src/app
 RUN npm i pm2 -g
 COPY ../../package.json .
+RUN npm pkg delete scripts.prepare
 RUN npm i --omit=dev
 COPY --from=builder /usr/src/app/dist ./dist
 EXPOSE 8000

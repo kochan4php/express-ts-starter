@@ -15,7 +15,7 @@ import { Response } from 'express';
  * @returns {Response} - Express response object
  */
 export function resSuccess(res: Response, status: number, message: string, data?: object | any): Response {
-    return res.status(status).type('application/json').json({ message, data });
+    return res.status(status).type('application/json').json({ success: true, message, data });
 }
 
 /**
@@ -27,5 +27,5 @@ export function resSuccess(res: Response, status: number, message: string, data?
  * @returns {Response} - Express response object
  */
 export function resFailed(res: Response, status: number, message: string, error?: object | any): Response {
-    return res.status(status).type('application/json').json({ message, error });
+    return res.status(status).type('application/json').json({ success: false, message, error });
 }
