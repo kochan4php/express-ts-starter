@@ -9,7 +9,7 @@ const { writeFile } = require('fs/promises');
 const clc = require('cli-color');
 
 const envExample = readFileSync('./env/.env.example', 'utf8');
-const environments = ['local', 'staging', 'production', 'production.local'];
+const environments = ['local', 'development', 'staging', 'production', 'production.local'];
 
 environments.forEach(async (environment) => {
     if (!existsSync('./env')) mkdirSync('./env');
