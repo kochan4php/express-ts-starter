@@ -1,5 +1,7 @@
 version: '3.8'
 
+name: expressts_db_dev
+
 services:
     mongodb:
         container_name: mongodb
@@ -8,12 +10,9 @@ services:
             dockerfile: ./Dockerfile
         restart: always
         ports:
-            - 27017:27017
+            - 27018:27017
         volumes:
-            - mongo-data:/data/db
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: admin
-            MONGO_INITDB_ROOT_PASSWORD: admin
+            - mongo-expressts:/data/db
         deploy:
             resources:
                 limits:
@@ -31,9 +30,7 @@ services:
         depends_on:
             - mongodb
         environment:
-            ME_CONFIG_MONGODB_ADMINUSERNAME: admin
-            ME_CONFIG_MONGODB_ADMINPASSWORD: admin
-            ME_CONFIG_MONGODB_URL: mongodb://admin:admin@mongodb:27017/
+            ME_CONFIG_MONGODB_URL: mongodb://mongodb:27017/
         deploy:
             resources:
                 limits:
@@ -41,5 +38,5 @@ services:
                     memory: 512M
 
 volumes:
-    mongo-data:
-        name: mongo-data
+    mongo-expressts:
+        name: mongo-expressts
