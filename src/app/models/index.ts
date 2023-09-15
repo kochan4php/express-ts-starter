@@ -3,9 +3,9 @@
  * @author {Deo Sbrn}
  */
 
-import { getModelForClass, setGlobalOptions } from "@typegoose/typegoose";
-import { User } from "./user.model";
-import { Session } from "./session.model";
+import { getModelForClass, setGlobalOptions } from '@typegoose/typegoose';
+import { User } from './user.model';
+import { Session } from './session.model';
 
 /**
  * @description This function is used to set global options for all models

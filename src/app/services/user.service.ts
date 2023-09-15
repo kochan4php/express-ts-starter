@@ -36,7 +36,7 @@ async function getOneUserById(id: string | mongoose.Types.ObjectId, selectedFiel
 async function getOneUser(
     filter: FilterQuery<User> = {},
     selectedField: ProjectionType<User> = {},
-    hidePassword: boolean = true
+    hidePassword: boolean = true,
 ): Promise<User | null> {
     const hidePasswordAndVersion = { password: 0, __v: 0 };
     return await UserModel.findOne(filter, {

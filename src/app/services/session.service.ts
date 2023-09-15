@@ -25,7 +25,7 @@ async function getAllSessions(filter: FilterQuery<Session> = {}): Promise<Sessio
  */
 async function getOneSessionById(
     id: string | mongoose.Types.ObjectId,
-    selectedField: ProjectionType<Session> = {}
+    selectedField: ProjectionType<Session> = {},
 ): Promise<Session | null> {
     return await getOneSession({ _id: id }, selectedField);
 }
