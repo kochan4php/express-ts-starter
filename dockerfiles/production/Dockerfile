@@ -5,9 +5,9 @@ FROM base as builder
 RUN apk add --no-cache libc6-compat
 RUN npm i -g pnpm
 WORKDIR /usr/src/app
-COPY ../package.json .
-COPY ../pnpm-lock.yaml .
-COPY ../. .
+COPY ../../package.json .
+COPY ../../pnpm-lock.yaml .
+COPY ../../. .
 RUN pnpm i
 RUN pnpm build
 
@@ -16,7 +16,7 @@ FROM base as prod
 ENV NODE_ENV=production
 WORKDIR /usr/src/app
 RUN npm i pm2 -g
-COPY ../package.json .
+COPY ../../package.json .
 RUN npm i --omit=dev
 COPY --from=builder /usr/src/app/dist ./dist
 EXPOSE 8000
