@@ -46,6 +46,9 @@ devDependencies:
   '@types/bcrypt':
     specifier: ^5.0.0
     version: 5.0.0
+  '@types/cli-color':
+    specifier: ^2.0.3
+    version: 2.0.3
   '@types/cookie-parser':
     specifier: ^1.4.4
     version: 1.4.4
@@ -277,6 +280,10 @@ packages:
     dependencies:
       '@types/connect': 3.4.36
       '@types/node': 20.6.2
+    dev: true
+
+  /@types/cli-color@2.0.3:
+    resolution: {integrity: sha512-JcGK/IFNVt5a99Xsz4wMCK8jfylpZ5E9AxzGcTVLD5nNYPYxXkylTRV7mcqA324rKLfqT3juU5KjQbI9CAV3SA==}
     dev: true
 
   /@types/connect@3.4.36:

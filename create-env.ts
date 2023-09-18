@@ -3,10 +3,9 @@
  * @author {Deo Sbrn}
  */
 
-/* eslint-disable @typescript-eslint/no-var-requires */
-const { existsSync, mkdirSync, readFileSync } = require('fs');
-const { writeFile } = require('fs/promises');
-const clc = require('cli-color');
+import { existsSync, mkdirSync, readFileSync } from 'fs';
+import { writeFile } from 'fs/promises';
+import clc from 'cli-color';
 
 const envExample = readFileSync('./env/.env.example', 'utf8');
 const environments = ['local', 'development', 'staging', 'production', 'production.local'];

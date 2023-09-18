@@ -25,7 +25,7 @@
         "lint:fix": "eslint src/**/*.ts --fix",
         "prettier:check": "prettier . --check",
         "prettier:fix": "prettier . --write",
-        "create-env": "node create-env.js",
+        "create-env": "ts-node create-env.ts",
         "prepare": "husky install"
     },
     "keywords": [
@@ -45,6 +45,7 @@
     "license": "Apache-2.0",
     "devDependencies": {
         "@types/bcrypt": "^5.0.0",
+        "@types/cli-color": "^2.0.3",
         "@types/cookie-parser": "^1.4.4",
         "@types/cors": "^2.8.14",
         "@types/express": "^4.17.17",
