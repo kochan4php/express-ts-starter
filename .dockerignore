@@ -5,3 +5,5 @@ dockerfiles
 .prettierignore
 .prettierrc
 *.md
+.husky
+docker
