@@ -4,6 +4,7 @@
     "description": "Express.ts Server starter template",
     "main": "index.js",
     "scripts": {
+        "update-deps": "pnpm update --latest",
         "setup-app": "sudo npm install -g pnpm && pnpm install && pnpm create-env",
         "setup-app:win": "npm install -g pnpm && pnpm install && pnpm create-env",
         "start:local:dev": "NODE_ENV=local nodemon -r dotenv/config src/index.ts",
@@ -22,7 +23,6 @@
         "docker:volume:rm": "docker volume rm mongodb-data mongo-expressts",
         "docker:up": "pnpm docker:down && docker compose up -d",
         "docker:down": "docker compose down",
-        "update-deps": "pnpm update --latest",
         "build": "tsc -p .",
         "lint": "eslint src/**/*.ts",
         "lint:fix": "eslint src/**/*.ts --fix",
