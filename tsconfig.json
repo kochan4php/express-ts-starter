@@ -13,5 +13,5 @@
         "moduleResolution": "Node",
         "lib": ["ESNext"]
     },
-    "exclude": ["node_modules", "build", "tests"]
+    "exclude": ["node_modules", "dist", "tests", "create-env.ts"]
 }
