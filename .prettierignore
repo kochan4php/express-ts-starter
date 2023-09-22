@@ -10,5 +10,5 @@ docker
 dockerfiles
 env
 shell
-docker.compose.yml
+docker-compose.yml
 pnpm-lock.yaml

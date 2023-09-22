@@ -13,10 +13,10 @@ services:
         healthcheck:
             test:
                 [
-                    "CMD",
-                    "curl",
-                    "-f",
-                    "http://localhost:8000/api/health-check"
+                    'CMD',
+                    'curl',
+                    '-f',
+                    'http://localhost:8000/api/health-check'
                 ]
             interval: 30s
             timeout: 30s
