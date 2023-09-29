@@ -60,8 +60,7 @@
         "nodemon": "^3.0.1",
         "prettier": "^3.0.3",
         "ts-node": "^10.9.1",
-        "typescript": "^5.2.2",
-        "win-node-env": "^0.6.1"
+        "typescript": "^5.2.2"
     },
     "dependencies": {
         "@typegoose/typegoose": "^11.5.0",
@@ -75,7 +74,8 @@
         "mongoose": "^7.5.3",
         "morgan": "^1.10.0",
         "npmlog": "^7.0.1",
-        "socket.io": "^4.7.2"
+        "socket.io": "^4.7.2",
+        "win-node-env": "^0.6.1"
     },
     "lint-staged": {
         "**/*.{js,jsx,ts,tsx,css,md,html}": [
