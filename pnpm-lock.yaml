@@ -44,9 +44,6 @@ dependencies:
   socket.io:
     specifier: ^4.7.2
     version: 4.7.2
-  win-node-env:
-    specifier: ^0.6.1
-    version: 0.6.1
 
 devDependencies:
   '@types/bcrypt':
@@ -2836,12 +2833,6 @@ packages:
     resolution: {integrity: sha512-eDMORYaPNZ4sQIuuYPDHdQvf4gyCF9rEEV/yPxGfwPkRodwEgiMUUXTx/dex+Me0wxx53S+NgUHaP7y3MGlDmg==}
     dependencies:
       string-width: 4.2.3
-    dev: false
-
-  /win-node-env@0.6.1:
-    resolution: {integrity: sha512-oR+MLQ6jdvwqkLEkKBYxRvBOYbTlQV9dJKn8vLzjA4HCzcqdlCE6H1oOvA7lAdCgNXiOX0xfjl/Y47ZcZN6FDA==}
-    os: [win32]
-    hasBin: true
     dev: false
 
   /wrap-ansi@8.1.0:
