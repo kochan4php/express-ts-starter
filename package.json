@@ -4,7 +4,7 @@
     "description": "Express.ts Server starter template",
     "main": "index.js",
     "scripts": {
-        "test": "jest --silent --detectOpenHandles --forceExit --runInBand",
+        "test": "cross-env NODE_ENV=test  --silent --detectOpenHandles --forceExit --runInBand",
         "update-deps": "pnpm update --latest",
         "setup-app": "sudo npm install -g pnpm && pnpm install && pnpm create-env",
         "setup-app:win": "npm install -g pnpm && pnpm install && pnpm create-env",

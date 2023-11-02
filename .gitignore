@@ -4,3 +4,4 @@ env/.env.local
 env/.env.production*
 env/.env.staging
 env/.env.development
+env/.env.testing

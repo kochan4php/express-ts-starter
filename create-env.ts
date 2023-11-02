@@ -8,7 +8,7 @@ import { writeFile } from 'fs/promises';
 import clc from 'cli-color';
 
 const envExample = readFileSync('./env/.env.example', 'utf8');
-const environments = ['local', 'development', 'staging', 'production', 'production.local'];
+const environments = ['local', 'testing', 'development', 'staging', 'production', 'production.local'];
 
 environments.forEach(async (environment) => {
     if (!existsSync('./env')) mkdirSync('./env');
