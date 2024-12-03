@@ -1,6 +1,6 @@
 {
     "name": "express-ts-starter",
-    "version": "1.0.0",
+    "version": "1.0.0-lts",
     "description": "Express.ts Server starter template",
     "main": "index.js",
     "scripts": {
