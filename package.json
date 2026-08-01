@@ -4,7 +4,7 @@
     "description": "Express.ts Server starter template",
     "main": "index.js",
     "scripts": {
-        "test": "cross-env NODE_ENV=test  --silent --detectOpenHandles --forceExit --runInBand",
+        "test": "cross-env NODE_ENV=test vitest run",
         "update-deps": "pnpm update --latest",
         "setup-app": "npm install && npm run create-env",
         "setup-app:pnpm": "pnpm install && pnpm create-env",
@@ -49,7 +49,6 @@
         "@types/cookie-parser": "^1.4.10",
         "@types/cors": "^2.8.19",
         "@types/express": "^5.0.6",
-        "@types/jest": "^30.0.0",
         "@types/jsonwebtoken": "^9.0.10",
         "@types/morgan": "^1.9.10",
         "@types/node": "^26.1.2",
@@ -60,14 +59,13 @@
         "@typescript-eslint/parser": "^8.65.0",
         "cli-color": "^2.0.4",
         "eslint": "^10.8.0",
-        "jest": "^30.4.2",
         "lint-staged": "^17.3.0",
         "prettier": "^3.9.6",
         "prisma": "^7.9.1",
         "supertest": "^7.2.2",
-        "ts-jest": "^29.4.12",
         "tsx": "^4.23.1",
-        "typescript": "^7.0.2"
+        "typescript": "^7.0.2",
+        "vitest": "^4.1.10"
     },
     "dependencies": {
         "@apidevtools/swagger-parser": "^12.1.0",

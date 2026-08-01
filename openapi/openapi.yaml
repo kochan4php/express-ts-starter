@@ -11,6 +11,8 @@ paths:
     $ref: './paths/main.yaml'
   /api/health-check:
     $ref: './paths/health-check.yaml'
+  /api/health-check/db:
+    $ref: './paths/health-check-db.yaml'
   /api/auth/register:
     $ref: './paths/auth/register.yaml'
   /api/auth/login:

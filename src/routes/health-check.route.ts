@@ -14,5 +14,6 @@ const router: Router = express.Router();
  * @endpoint /api/health-check
  */
 router.get('/', healthCheckController.healthCheck);
+router.get('/db', healthCheckController.dbHealthCheck);
 
 export default router;
