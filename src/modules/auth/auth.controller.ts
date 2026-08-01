@@ -8,10 +8,13 @@ import { SessionService } from './session.service';
 import { UserService } from '../users/users.service';
 import { logger } from '../../common/utils/logger';
 
+import { injectable, inject } from 'tsyringe';
+
+@injectable()
 export class AuthController {
     constructor(
-        private readonly userService: UserService,
-        private readonly sessionService: SessionService
+        @inject(UserService) private readonly userService: UserService,
+        @inject(SessionService) private readonly sessionService: SessionService
     ) {}
 
     public async register(req: Request, res: Response): Promise<Response> {

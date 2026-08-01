@@ -6,11 +6,14 @@ export class ValidateMiddleware {
     public static handle(schema: ZodObject<any>) {
         return async (req: Request, res: Response, next: NextFunction) => {
             try {
-                await schema.parseAsync({
+                const parsed = await schema.parseAsync({
                     body: req.body,
                     query: req.query,
                     params: req.params,
                 });
+                if (parsed.body !== undefined) req.body = parsed.body;
+                if (parsed.query !== undefined) Object.assign(req.query, parsed.query);
+                if (parsed.params !== undefined) Object.assign(req.params, parsed.params);
                 return next();
             } catch (error) {
                 if (error instanceof ZodError) {

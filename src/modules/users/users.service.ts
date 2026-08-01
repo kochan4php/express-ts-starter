@@ -1,10 +1,12 @@
+import { injectable, inject } from 'tsyringe';
 import { IUserRepository } from './users.repository';
 
+@injectable()
 export class UserService {
-    constructor(private readonly userRepository: IUserRepository) {}
+    constructor(@inject('IUserRepository') private readonly userRepository: IUserRepository) {}
 
-    public async getAllUsers(filter: any = {}): Promise<any[]> {
-        return await this.userRepository.findAll(filter, { select: { id: true, name: true, phoneNumber: true, email: true, avatar: true, bio: true, role: true } });
+    public async getAllUsers(filter: any = {}, limit: number = 10, offset: number = 0): Promise<any[]> {
+        return await this.userRepository.findAll(filter, { select: { id: true, name: true, phoneNumber: true, email: true, avatar: true, bio: true, role: true }, take: limit, skip: offset });
     }
 
     public async getOneUser(filter: any, select: any = {}, throwError: boolean = false): Promise<any | null> {

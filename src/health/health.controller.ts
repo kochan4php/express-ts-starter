@@ -3,6 +3,9 @@ import { resFailed, resSuccess } from '../common/response';
 import { Logger } from '../common/utils/logger';
 import { prisma } from '../database/connection';
 
+import { injectable } from 'tsyringe';
+
+@injectable()
 export class HealthController {
     public async healthCheck(_: Request, res: Response): Promise<Response> {
         const health = {

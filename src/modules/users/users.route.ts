@@ -1,22 +1,30 @@
-import express, { Router } from 'express';
 import { UserController } from './users.controller';
-import { UserService } from './users.service';
-import { userRepository } from './users.repository';
-
+import { container } from '../../container';
 import { asyncHandler } from '../../common/utils/asyncHandler';
-
 import { validate } from '../../common/middlewares/validate.middleware';
-import { createUserSchema, updateUserSchema } from './users.dto';
+import { createUserSchema, updateUserSchema, getUsersSchema } from './users.dto';
+import { BaseRoute } from '../../common/base.route';
+import auth from '../../common/middlewares/auth.middleware';
+import isAdmin from '../../common/middlewares/is-admin.middleware';
 
-const router: Router = express.Router();
+import { injectable } from 'tsyringe';
 
-const userService = new UserService(userRepository);
-const userController = new UserController(userService);
+@injectable()
+export class UserRoute extends BaseRoute {
+    private userController: UserController;
 
-router.get('/', asyncHandler(userController.getAllUsers.bind(userController)));
-router.get('/:id', asyncHandler(userController.getUserById.bind(userController)));
-router.post('/', validate(createUserSchema), asyncHandler(userController.createUser.bind(userController)));
-router.put('/:id', validate(updateUserSchema), asyncHandler(userController.updateUserById.bind(userController)));
-router.delete('/:id', asyncHandler(userController.deleteUserById.bind(userController)));
+    constructor() {
+        super('/api/admin/users');
+        this.userController = container.resolve(UserController);
+        this.initializeRoutes();
+    }
 
-export default router;
+    protected initializeRoutes(): void {
+        this.router.use(auth, isAdmin); // Applying middlewares for all routes under this path
+        this.router.get('/', validate(getUsersSchema), asyncHandler(this.userController.getAllUsers.bind(this.userController)));
+        this.router.get('/:id', asyncHandler(this.userController.getUserById.bind(this.userController)));
+        this.router.post('/', validate(createUserSchema), asyncHandler(this.userController.createUser.bind(this.userController)));
+        this.router.put('/:id', validate(updateUserSchema), asyncHandler(this.userController.updateUserById.bind(this.userController)));
+        this.router.delete('/:id', asyncHandler(this.userController.deleteUserById.bind(this.userController)));
+    }
+}

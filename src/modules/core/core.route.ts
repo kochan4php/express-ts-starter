@@ -1,10 +1,21 @@
-import express, { Router } from 'express';
 import { CoreController } from './core.controller';
+import { container } from '../../container';
 import { asyncHandler } from '../../common/utils/asyncHandler';
+import { BaseRoute } from '../../common/base.route';
 
-const router: Router = express.Router();
-const coreController = new CoreController();
+import { injectable } from 'tsyringe';
 
-router.get('/', asyncHandler(coreController.index.bind(coreController)));
+@injectable()
+export class CoreRoute extends BaseRoute {
+    private coreController: CoreController;
 
-export default router;
+    constructor() {
+        super('/api');
+        this.coreController = container.resolve(CoreController);
+        this.initializeRoutes();
+    }
+
+    protected initializeRoutes(): void {
+        this.router.get('/', asyncHandler(this.coreController.index.bind(this.coreController)));
+    }
+}

@@ -25,4 +25,4 @@ RUN npx prisma generate
 COPY --from=builder /usr/src/app/dist ./dist
 EXPOSE 8000
 ENTRYPOINT [ "pm2-runtime" ]
-CMD [ "dist/index.js" ]
+CMD [ "dist/server.js" ]

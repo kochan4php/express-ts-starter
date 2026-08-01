@@ -1,7 +1,9 @@
+import { injectable, inject } from 'tsyringe';
 import { ISessionRepository } from './session.repository';
 
+@injectable()
 export class SessionService {
-    constructor(private readonly sessionRepository: ISessionRepository) {}
+    constructor(@inject('ISessionRepository') private readonly sessionRepository: ISessionRepository) {}
 
     public async getAllSessions(filter: any = {}): Promise<any[]> {
         return await this.sessionRepository.findAll(filter);

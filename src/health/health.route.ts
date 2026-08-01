@@ -1,11 +1,22 @@
-import express, { Router } from 'express';
 import { HealthController } from './health.controller';
+import { container } from '../container';
 import { asyncHandler } from '../common/utils/asyncHandler';
+import { BaseRoute } from '../common/base.route';
 
-const router: Router = express.Router();
-const healthController = new HealthController();
+import { injectable } from 'tsyringe';
 
-router.get('/', asyncHandler(healthController.healthCheck.bind(healthController)));
-router.get('/db', asyncHandler(healthController.dbHealthCheck.bind(healthController)));
+@injectable()
+export class HealthRoute extends BaseRoute {
+    private healthController: HealthController;
 
-export default router;
+    constructor() {
+        super('/api/health-check');
+        this.healthController = container.resolve(HealthController);
+        this.initializeRoutes();
+    }
+
+    protected initializeRoutes(): void {
+        this.router.get('/', asyncHandler(this.healthController.healthCheck.bind(this.healthController)));
+        this.router.get('/db', asyncHandler(this.healthController.dbHealthCheck.bind(this.healthController)));
+    }
+}

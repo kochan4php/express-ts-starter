@@ -8,7 +8,12 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import { logger } from '../common/utils/logger';
 import { DATABASE_URL } from '../config/env';
 
-const pool = new Pool({ connectionString: DATABASE_URL });
+const pool = new Pool({
+    connectionString: DATABASE_URL,
+    max: process.env.DB_POOL_MAX ? parseInt(process.env.DB_POOL_MAX) : 20,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 2000,
+});
 const adapter = new PrismaPg(pool);
 export const prisma = new PrismaClient({ adapter });
 

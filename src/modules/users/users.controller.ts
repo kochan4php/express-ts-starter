@@ -3,13 +3,17 @@ import { logger } from '../../common/utils/logger';
 import { HashHelper } from '../../common/utils/hash.helper';
 import { resFailed, resSuccess } from '../../common/response';
 import { UserService } from './users.service';
+import { injectable, inject } from 'tsyringe';
 
+@injectable()
 export class UserController {
-    constructor(private readonly userService: UserService) {}
+    constructor(@inject(UserService) private readonly userService: UserService) {}
 
-    public async getAllUsers(_: Request, res: Response): Promise<Response> {
+    public async getAllUsers(req: Request, res: Response): Promise<Response> {
         try {
-            const users = await this.userService.getAllUsers();
+            const limit = typeof req.query.limit === 'number' ? req.query.limit : 10;
+            const offset = typeof req.query.offset === 'number' ? req.query.offset : 0;
+            const users = await this.userService.getAllUsers({}, limit, offset);
 
             if (!users.length) {
                 const message: string = 'Users empty';

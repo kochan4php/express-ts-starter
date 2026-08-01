@@ -1,6 +1,9 @@
 import { Request, Response } from 'express';
 import { resSuccess } from '../../common/response';
 
+import { injectable } from 'tsyringe';
+
+@injectable()
 export class CoreController {
     public async index(_: Request, res: Response): Promise<Response> {
         const message = 'Hello from Node.js + Express.js + TypeScript Starter';
