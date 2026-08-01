@@ -70,8 +70,10 @@
         "typescript": "^7.0.2"
     },
     "dependencies": {
+        "@apidevtools/swagger-parser": "^12.1.0",
         "@prisma/adapter-pg": "^7.9.1",
         "@prisma/client": "^7.9.1",
+        "@scalar/express-api-reference": "^0.10.12",
         "bcrypt": "^6.0.0",
         "cookie-parser": "^1.4.7",
         "cors": "^2.8.6",

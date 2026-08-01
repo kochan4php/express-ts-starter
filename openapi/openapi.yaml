@@ -1,0 +1,31 @@
+openapi: 3.0.0
+info:
+  title: Express TS Starter API
+  version: 1.0.0
+  description: API Documentation for Express TS Starter
+servers:
+  - url: http://localhost:3000
+    description: Local server
+paths:
+  /api:
+    $ref: './paths/main.yaml'
+  /api/health-check:
+    $ref: './paths/health-check.yaml'
+  /api/auth/register:
+    $ref: './paths/auth/register.yaml'
+  /api/auth/login:
+    $ref: './paths/auth/login.yaml'
+  /api/auth/logout:
+    $ref: './paths/auth/logout.yaml'
+  /api/auth/refresh-token:
+    $ref: './paths/auth/refresh-token.yaml'
+  /api/admin/users:
+    $ref: './paths/admin/users.yaml'
+  /api/admin/users/{id}:
+    $ref: './paths/admin/user-by-id.yaml'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

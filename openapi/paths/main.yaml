@@ -1,0 +1,24 @@
+get:
+  summary: Main endpoint
+  tags:
+    - Main
+  responses:
+    '200':
+      description: Welcome message
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              message:
+                type: string
+                example: "Hello from Node.js + Express.js + TypeScript Starter"
+              data:
+                type: object
+                properties:
+                  docs:
+                    type: string
+                    example: "https://github.com/kochan4php/express-ts-starter"
