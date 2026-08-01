@@ -66,7 +66,7 @@ async function updateOneSessionById(id: string | mongoose.Types.ObjectId, data: 
  * @returns {Promise<any>} - Session object or null
  */
 async function updateOneSession(filter: FilterQuery<Session>, data: UpdateQuery<Session>): Promise<any> {
-    return await SessionModel.updateOne(filter, data, { new: true });
+    return await SessionModel.updateOne(filter, data);
 }
 
 /**

@@ -71,7 +71,7 @@ async function updateOneUserById(id: string | mongoose.Types.ObjectId, data: Upd
  * @returns {Promise<any>} - Result
  */
 async function updateOneUser(filter: FilterQuery<User>, data: UpdateQuery<User>): Promise<any> {
-    return await UserModel.updateOne(filter, data, { new: true });
+    return await UserModel.updateOne(filter, data);
 }
 
 /**

@@ -4,7 +4,7 @@
  * @author {Deo Sbrn}
  */
 
-import { JwtPayload } from 'jsonwebtoken';
+import { JwtPayload, SignOptions } from 'jsonwebtoken';
 import { SESSION_TOKEN_SECRET } from '../../config/env';
 import { decodeToken, generateToken, verifyToken } from '../jwt';
 
@@ -14,7 +14,7 @@ import { decodeToken, generateToken, verifyToken } from '../jwt';
  * @param {string} expired
  * @returns
  */
-export function generateSessionToken(payload: object | string = {}, expired: string): string {
+export function generateSessionToken(payload: object | string = {}, expired: SignOptions['expiresIn']): string {
     return generateToken(payload, SESSION_TOKEN_SECRET, expired);
 }
 

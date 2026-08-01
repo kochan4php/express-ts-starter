@@ -4,7 +4,7 @@
  * @author {Deo Sbrn}
  */
 
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt, { JwtPayload, SignOptions } from 'jsonwebtoken';
 
 /**
  * @description Generate token
@@ -13,7 +13,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
  * @param {string | number} expired - Expired time
  * @returns {string} - Token
  */
-export function generateToken(payload: object | string = {}, tokenSecret: string, expired: string | number): string {
+export function generateToken(payload: object | string = {}, tokenSecret: string, expired: SignOptions['expiresIn']): string {
     return jwt.sign(payload, tokenSecret as string, { expiresIn: expired });
 }
 
