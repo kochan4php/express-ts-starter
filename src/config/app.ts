@@ -6,7 +6,7 @@
 import { CorsOptions } from 'cors';
 import { Options } from 'express-rate-limit';
 import { ServerOptions } from 'socket.io';
-import { TRUSTED_DOMAINS } from './env';
+import { TRUSTED_DOMAINS } from '../config/env';
 
 export const socketConfig = (): Partial<ServerOptions> => ({
     cors: {

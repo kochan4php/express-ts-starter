@@ -7,12 +7,11 @@
 
 import { Application } from 'express';
 import { Server, Socket } from 'socket.io';
-import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import init from './app';
-import SocketController from './app/controllers/socket.controller';
+import socketController from './modules/core/socket.controller';
 import { socketConfig } from './config/app';
 import { PORT } from './config/env';
-import { logger } from './logger';
+import { logger } from './common/utils/logger';
 
 /**
  * Bootstrap the application
@@ -20,6 +19,6 @@ import { logger } from './logger';
 (async function () {
     const app: Application = init();
     const server = app.listen(PORT, () => logger.info('Server', `started on port ${PORT}`));
-    const io: Server<DefaultEventsMap> = new Server(server, socketConfig());
-    io.on('connection', (socket: Socket<DefaultEventsMap>) => SocketController(socket, io));
+    const io: Server = new Server(server, socketConfig());
+    io.on('connection', (socket: Socket) => socketController(socket, io));
 })();

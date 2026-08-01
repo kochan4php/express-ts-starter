@@ -10,9 +10,9 @@
         "skipLibCheck": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "moduleResolution": "Node",
+        "moduleResolution": "bundler",
         "lib": ["ESNext"],
         "types": ["vitest/globals", "node"]
     },
-    "exclude": ["node_modules", "dist", "tests", "create-env.ts", "__tests__", "__mocks__"]
+    "exclude": ["node_modules", "dist", "tests", "create-env.ts", "__tests__", "__mocks__", "*.config.ts", "*.config.mts"]
 }

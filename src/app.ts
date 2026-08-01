@@ -14,15 +14,16 @@ import fs from 'fs';
 import path from 'path';
 import { apiReference } from '@scalar/express-api-reference';
 import SwaggerParser from '@apidevtools/swagger-parser';
-import { resFailed } from './app/helpers/response.helper';
-import auth from './app/middlewares/auth.middleware';
-import isAdmin from './app/middlewares/is-admin.middleware';
+import { resFailed } from './common/response';
+import auth from './common/middlewares/auth.middleware';
+import isAdmin from './common/middlewares/is-admin.middleware';
+import { errorHandler } from './common/middlewares/error.middleware';
 import { corsConfig, limitterConfig } from './config/app';
-import database from './config/database';
-import userRoute from './routes/admin/user.route';
-import authRoute from './routes/auth.route';
-import healthCheckRoute from './routes/health-check.route';
-import mainRoute from './routes/main.route';
+import database from './database/connection';
+import userRoute from './modules/users/users.route';
+import authRoute from './modules/auth/auth.route';
+import healthCheckRoute from './health/health.route';
+import mainRoute from './modules/core/core.route';
 
 /**
  * @description Init express application
@@ -62,7 +63,7 @@ const init = function (): Application {
                 spec: {
                     content: bundledSpec,
                 },
-            })(req, res, next);
+            })(req as any, res as any, next);
         });
     }
 
@@ -80,6 +81,9 @@ const init = function (): Application {
 
     // * 404 Not Found
     app.use((_, res) => resFailed(res, 404, 'Path Not Found. Please go to /api'));
+
+    // * Global Error Handler
+    app.use(errorHandler);
 
     // * Return express app
     return app;
