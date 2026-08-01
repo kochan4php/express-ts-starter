@@ -54,6 +54,7 @@
         "@types/morgan": "^1.9.10",
         "@types/node": "^26.1.2",
         "@types/npmlog": "^7.0.0",
+        "@types/pg": "^8.20.0",
         "@types/supertest": "^7.2.1",
         "@typescript-eslint/eslint-plugin": "^8.65.0",
         "@typescript-eslint/parser": "^8.65.0",
@@ -62,14 +63,15 @@
         "jest": "^30.4.2",
         "lint-staged": "^17.3.0",
         "prettier": "^3.9.6",
-        "prisma": "^5.22.0",
+        "prisma": "^7.9.1",
         "supertest": "^7.2.2",
         "ts-jest": "^29.4.12",
         "tsx": "^4.23.1",
         "typescript": "^7.0.2"
     },
     "dependencies": {
-        "@prisma/client": "^5.22.0",
+        "@prisma/adapter-pg": "^7.9.1",
+        "@prisma/client": "^7.9.1",
         "bcrypt": "^6.0.0",
         "cookie-parser": "^1.4.7",
         "cors": "^2.8.6",
@@ -80,6 +82,7 @@
         "jsonwebtoken": "^9.0.3",
         "morgan": "^1.11.0",
         "npmlog": "^7.0.1",
+        "pg": "^8.22.0",
         "socket.io": "^4.8.3"
     },
     "lint-staged": {
