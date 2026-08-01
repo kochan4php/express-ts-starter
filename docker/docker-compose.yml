@@ -3,40 +3,19 @@ version: '3.8'
 name: expressts_db_dev
 
 services:
-    mongodb:
-        container_name: mongodb
-        build:
-            context: ./mongodb
-            dockerfile: ./Dockerfile
+    postgres:
+        container_name: postgres
+        image: postgres:15-alpine
         restart: always
-        ports:
-            - 27018:27017
-        volumes:
-            - mongo-expressts:/data/db
-        deploy:
-            resources:
-                limits:
-                    cpus: '0.50'
-                    memory: 512M
-
-    mongo-express:
-        container_name: mongo-express
-        build:
-            context: ./mongo-express
-            dockerfile: ./Dockerfile
-        restart: always
-        ports:
-            - 8081:8081
-        depends_on:
-            - mongodb
         environment:
-            ME_CONFIG_MONGODB_URL: mongodb://mongodb:27017/
-        deploy:
-            resources:
-                limits:
-                    cpus: '0.50'
-                    memory: 512M
+            POSTGRES_USER: dev
+            POSTGRES_PASSWORD: dev
+            POSTGRES_DB: expressts
+        ports:
+            - 5432:5432
+        volumes:
+            - postgres-data:/var/lib/postgresql/data
 
 volumes:
-    mongo-expressts:
-        name: mongo-expressts
+    postgres-data:
+        name: postgres-data

@@ -7,6 +7,7 @@ RUN npm i -g pnpm
 WORKDIR /usr/src/app
 COPY ../../package.json .
 COPY ../../pnpm-lock.yaml .
+COPY ../../prisma ./prisma
 RUN pnpm i --frozen-lockfile
 
 # Development image

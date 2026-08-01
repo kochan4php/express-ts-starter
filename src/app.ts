@@ -1,6 +1,6 @@
 /**
  * @description This file contain a method to init express application
- * @description It will connect to database MongoDB and use all middlewares
+ * @description It will connect to database PostgreSQL and use all middlewares
  * @description It also contain all routes for all endpoints
  * @author {Deo Sbrn}
  */

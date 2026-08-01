@@ -25,7 +25,7 @@ services:
         env_file: ./env/.env.production.local
         environment:
             PORT: 8000
-            MONGO_URI: mongodb://mongodb:27017/db_express_ts
+            DATABASE_URL: postgresql://dev:dev@postgres:5432/expressts
             ACCESS_TOKEN_SECRET: das9807asd908a90d8sa09d323
             REFRESH_TOKEN_SECRET: c9sddc8s90cuscuj90ew8r09w3
             SESSION_TOKEN_SECRET: das90d8sad7sa8d7as89d7asdsad
@@ -33,21 +33,25 @@ services:
         networks:
             - express-ts-starter-network
         depends_on:
-            - mongodb
+            - postgres
         deploy:
             resources:
                 limits:
                     cpus: '0.50'
                     memory: 512M
 
-    mongodb:
-        container_name: mongodb
-        image: mongo:latest
+    postgres:
+        container_name: postgres
+        image: postgres:15-alpine
         restart: always
+        environment:
+            POSTGRES_USER: dev
+            POSTGRES_PASSWORD: dev
+            POSTGRES_DB: expressts
         ports:
-            - 27017:27017
+            - 5432:5432
         volumes:
-            - mongodb-data:/data/db
+            - postgres-data:/var/lib/postgresql/data
         networks:
             - express-ts-starter-network
         deploy:
@@ -62,5 +66,5 @@ networks:
         driver: bridge
 
 volumes:
-    mongodb-data:
-        name: mongodb-data
+    postgres-data:
+        name: postgres-data

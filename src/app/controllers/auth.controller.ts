@@ -5,13 +5,11 @@
  */
 
 import { Request, Response } from 'express';
-import mongoose from 'mongoose';
 import { generateAccessToken } from '../../jwt/helpers/access-token.helper';
 import { generateRefreshToken, verifyRefreshToken } from '../../jwt/helpers/refresh-token.helper';
 import { generateSessionToken, getSessionId, verifySessionToken } from '../../jwt/helpers/session-token.helper';
 import { compare, hash } from '../helpers';
 import { resFailed, resSuccess } from '../helpers';
-import { User } from '../models/user.model';
 import SessionService from '../services/session.service';
 import UserService from '../services/user.service';
 import { logger } from '../../logger';
@@ -25,7 +23,7 @@ import { logger } from '../../logger';
 async function register(req: Request, res: Response): Promise<Response> {
     try {
         const { name, phoneNumber, email, password } = req.body;
-        const user: User | null = await UserService.getOneUser({ email });
+        const user = await UserService.getOneUser({ email });
 
         if (user) {
             const message = 'Email already registered';
@@ -34,8 +32,8 @@ async function register(req: Request, res: Response): Promise<Response> {
 
         const hashPassword = await hash(password);
         const data = { name, phoneNumber, email, password: hashPassword };
-        const newUser: User = await UserService.createUser(data);
-        const getNewUserWithoutPassword: User | null = await UserService.getOneUser({ email: newUser.email });
+        const newUser = await UserService.createUser(data);
+        const getNewUserWithoutPassword = await UserService.getOneUser({ email: newUser.email });
 
         const message = 'Register success';
         return resSuccess(res, 201, message, { user: getNewUserWithoutPassword });
@@ -54,8 +52,8 @@ async function register(req: Request, res: Response): Promise<Response> {
 async function login(req: Request, res: Response): Promise<Response> {
     try {
         const { loginType, password } = req.body;
-        const filter: mongoose.FilterQuery<User> = { $or: [{ email: loginType }, { phoneNumber: loginType }] };
-        const user: User | null = await UserService.getOneUser(filter, {}, false);
+        const filter = { OR: [{ email: loginType }, { phoneNumber: loginType }] };
+        const user = await UserService.getOneUser(filter, {}, false);
 
         if (!user) {
             const message = 'User not found';
@@ -69,17 +67,17 @@ async function login(req: Request, res: Response): Promise<Response> {
             return resFailed(res, 400, message);
         }
 
-        const JWTPayload = { id: user._id, email: user.email, role: user.role };
+        const JWTPayload = { id: user.id, email: user.email, role: user.role };
         const accessToken = generateAccessToken(JWTPayload, '5h');
         const refreshToken = generateRefreshToken(JWTPayload, '5d');
 
         const date = new Date();
-        const sessionObj = { refreshToken, userId: user._id, expiresAt: date.setDate(date.getDate() + 5) };
+        const sessionObj = { refreshToken, userId: user.id, expiresAt: new Date(date.setDate(date.getDate() + 5)) };
         const newSession = await SessionService.createSession(sessionObj);
 
-        await UserService.updateOneUserById(user._id, { $push: { sessions: newSession } });
+        // ponytail: removed $push to User sessions array because YAGNI in relational DB
 
-        const encryptSessionId = generateSessionToken({ sessionId: newSession._id.toString() }, '5d');
+        const encryptSessionId = generateSessionToken({ sessionId: newSession.id }, '5d');
 
         res.cookie('session-backend', encryptSessionId, {
             httpOnly: true,
@@ -122,7 +120,7 @@ async function refreshToken(req: Request, res: Response): Promise<Response> {
             await verifySessionToken(tokenSessionId);
         } catch (error: any) {
             res.clearCookie('session-backend');
-            SessionService.revokeSession(existsSession?._id as mongoose.Types.ObjectId);
+            SessionService.revokeSession(existsSession.id);
 
             const message = 'Session not valid, please login again';
             return resFailed(res, 403, message);
@@ -132,25 +130,25 @@ async function refreshToken(req: Request, res: Response): Promise<Response> {
             await verifyRefreshToken(existsSession.refreshToken as string);
         } catch (error: any) {
             res.clearCookie('session-backend');
-            SessionService.revokeSession(existsSession._id as mongoose.Types.ObjectId);
+            SessionService.revokeSession(existsSession.id);
 
             const message = 'Your session is expired';
             return resFailed(res, 403, message);
         }
 
-        const user: User | null = await UserService.getOneUser({ _id: existsSession.userId });
+        const user = await UserService.getOneUser({ id: existsSession.userId });
 
         if (!user) {
             const message = 'User not found';
             return resFailed(res, 404, message);
         }
 
-        const JWTPayload = { id: user._id, email: user.email, role: user.role };
+        const JWTPayload = { id: user.id, email: user.email, role: user.role };
         const accessToken = generateAccessToken(JWTPayload, '5h');
         const refreshToken = generateRefreshToken(JWTPayload, '5d');
 
-        const newSession = await SessionService.updateOneSessionById(existsSession._id, { refreshToken });
-        const encryptSessionId = generateSessionToken({ sessionId: newSession?._id.toString() }, '5d');
+        const newSession = await SessionService.updateOneSessionById(existsSession.id, { refreshToken });
+        const encryptSessionId = generateSessionToken({ sessionId: newSession?.id }, '5d');
 
         res.clearCookie('session-backend');
         res.cookie('session-backend', encryptSessionId, {
@@ -203,15 +201,15 @@ async function logout(req: Request, res: Response): Promise<Response> {
             return resFailed(res, 403, message);
         }
 
-        const user: User | null = await UserService.getOneUser({ _id: existsSession.userId });
+        const user = await UserService.getOneUser({ id: existsSession.userId });
 
         if (!user) {
             const message = 'User not found';
             return resFailed(res, 404, message);
         }
 
-        await UserService.updateOneUserById(user._id, { $pull: { sessions: existsSession._id } });
-        await SessionService.deleteOneSessionById(existsSession._id);
+        // ponytail: removed $pull to User sessions array because YAGNI in relational DB
+        await SessionService.deleteOneSessionById(existsSession.id);
 
         res.clearCookie('session-backend');
 

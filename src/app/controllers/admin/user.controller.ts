@@ -8,7 +8,6 @@ import { Request, Response } from 'express';
 import { logger } from '../../../logger';
 import { hash } from '../../helpers/hash.helper';
 import { resFailed, resSuccess } from '../../helpers/response.helper';
-import { User } from '../../models/user.model';
 import UserService from '../../services/user.service';
 
 /**
@@ -19,7 +18,7 @@ import UserService from '../../services/user.service';
  */
 async function getAllUsers(_: Request, res: Response): Promise<Response> {
     try {
-        const users: User[] = await UserService.getAllUsers();
+        const users = await UserService.getAllUsers();
 
         if (!users.length) {
             const message: string = 'Users empty';
@@ -43,7 +42,7 @@ async function getAllUsers(_: Request, res: Response): Promise<Response> {
 async function getUserById(req: Request, res: Response): Promise<Response> {
     try {
         const { id } = req.params;
-        const user: User | null = await UserService.getOneUserById(id);
+        const user = await UserService.getOneUserById(id);
 
         if (!user) {
             const message: string = 'User not found';
@@ -67,7 +66,7 @@ async function getUserById(req: Request, res: Response): Promise<Response> {
 async function createUser(req: Request, res: Response): Promise<Response> {
     try {
         const { name, phoneNumber, email, password } = req.body;
-        const existsUser = await UserService.getOneUser({ $or: [{ phoneNumber }, { email }] });
+        const existsUser = await UserService.getOneUser({ OR: [{ phoneNumber }, { email }] });
 
         if (existsUser) {
             const message: string = 'Username or email already exists';
@@ -76,7 +75,7 @@ async function createUser(req: Request, res: Response): Promise<Response> {
 
         const passwordHash = await hash(password);
         const data = { name, phoneNumber, email, password: passwordHash };
-        const user: User = await UserService.createUser(data);
+        const user = await UserService.createUser(data);
 
         const message: string = 'Success create new user';
         return resSuccess(res, 201, message, { user });
@@ -95,7 +94,7 @@ async function createUser(req: Request, res: Response): Promise<Response> {
 async function updateUserById(req: Request, res: Response): Promise<Response> {
     try {
         const { id } = req.params;
-        const isExistsUser: User | null = await UserService.getOneUserById(id);
+        const isExistsUser = await UserService.getOneUserById(id);
 
         if (!isExistsUser) {
             const message: string = 'User not found';
@@ -104,7 +103,7 @@ async function updateUserById(req: Request, res: Response): Promise<Response> {
 
         const { name, phoneNumber, email } = req.body;
         const data = { name, phoneNumber, email };
-        const user: User | null = await UserService.updateOneUserById(id, data);
+        const user = await UserService.updateOneUserById(id, data);
 
         const message: string = 'Success update user by id';
         return resSuccess(res, 200, message, { user });
@@ -123,15 +122,14 @@ async function updateUserById(req: Request, res: Response): Promise<Response> {
 async function deleteUserById(req: Request, res: Response): Promise<Response> {
     try {
         const { id } = req.params;
-        const isExistsUser: User | null = await UserService.getOneUserById(id);
+        const isExistsUser = await UserService.getOneUserById(id);
 
         if (!isExistsUser) {
             const message: string = 'User not found';
             return resFailed(res, 404, message);
         }
 
-        const data = { $pull: { sessions: [] } };
-        await UserService.updateOneUserById(id, data);
+        // ponytail: Cascade delete is handled by DB for sessions
         await UserService.deleteOneUserById(id);
 
         const message: string = 'Success delete user by id';

@@ -1,95 +1,45 @@
 /**
- * @description This file contain all functions to interact with users collection in MongoDB database
+ * @description This file contain all functions to interact with users table in PostgreSQL database
  * @author {Deo Sbrn}
  */
+import { prisma } from '../../config/database';
 
-import mongoose, { FilterQuery, ProjectionType, UpdateQuery } from 'mongoose';
-import { UserModel } from '../models';
-import { User } from '../models/user.model';
-
-/**
- * @description Get all users
- * @param {FilterQuery<User>} filter - Filter query
- * @returns {Promise<User[]>} - Array of users
- */
-async function getAllUsers(filter: FilterQuery<User> = {}): Promise<User[]> {
-    return await UserModel.find(filter, { password: 0, __v: 0 });
+async function getAllUsers(filter: any = {}): Promise<any[]> {
+    return await prisma.user.findMany({ where: filter, select: { id: true, name: true, phoneNumber: true, email: true, avatar: true, bio: true, role: true } });
 }
 
-/**
- * @description Get one user by id
- * @param {string | mongoose.Types.ObjectId} id - User id
- * @param {ProjectionType<User>} selectedField - Selected field
- * @returns {Promise<User | null>} - User object or null
- */
-async function getOneUserById(id: string | mongoose.Types.ObjectId, selectedField: ProjectionType<User> = {}): Promise<User | null> {
-    return await getOneUser({ _id: id }, selectedField);
+async function getOneUserById(id: string, selectedField: any = {}): Promise<any | null> {
+    return await getOneUser({ id }, selectedField);
 }
 
-/**
- * @description Get one user by filter
- * @param {FilterQuery<User>} filter - Filter query
- * @param {ProjectionType<User>} selectedField - Selected field
- * @param {boolean} hidePassword - Hide password field
- * @returns {Promise<User | null>} - User object or null
- */
-async function getOneUser(
-    filter: FilterQuery<User> = {},
-    selectedField: ProjectionType<User> = {},
-    hidePassword: boolean = true,
-): Promise<User | null> {
-    const hidePasswordAndVersion = { password: 0, __v: 0 };
-    return await UserModel.findOne(filter, {
-        ...(hidePassword ? hidePasswordAndVersion : {}),
-        ...(typeof selectedField === 'object' ? selectedField : {}),
-    });
+async function getOneUser(filter: any = {}, selectedField: any = {}, hidePassword: boolean = true): Promise<any | null> {
+    const user = await prisma.user.findFirst({ where: filter });
+    if (!user) return null;
+    if (hidePassword) {
+        const { password, ...rest } = user;
+        return rest;
+    }
+    return user;
 }
 
-/**
- * @description Create new user
- * @param {User | object} data - User data
- * @returns {Promise<User>} - User object
- */
-async function createUser(data: User | object): Promise<User> {
-    return await UserModel.create(data);
+async function createUser(data: any): Promise<any> {
+    return await prisma.user.create({ data });
 }
 
-/**
- * @description Update user by id
- * @param {string | mongoose.Types.ObjectId} id - User id
- * @param {UpdateQuery<User>} data - User data
- * @returns {Promise<User | null>} - User object or null
- */
-async function updateOneUserById(id: string | mongoose.Types.ObjectId, data: UpdateQuery<User>): Promise<User | null> {
-    return await UserModel.findByIdAndUpdate(id, data, { new: true });
+async function updateOneUserById(id: string, data: any): Promise<any | null> {
+    return await prisma.user.update({ where: { id }, data });
 }
 
-/**
- * @description Update user by filter
- * @param {FilterQuery<User>} filter - Filter query
- * @param {UpdateQuery<User>} data - User data
- * @returns {Promise<any>} - Result
- */
-async function updateOneUser(filter: FilterQuery<User>, data: UpdateQuery<User>): Promise<any> {
-    return await UserModel.updateOne(filter, data);
+async function updateOneUser(filter: any, data: any): Promise<any> {
+    return await prisma.user.updateMany({ where: filter, data });
 }
 
-/**
- * @description Delete user by id
- * @param {string | mongoose.Types.ObjectId} id - User id
- * @returns {Promise<any>} - Result
- */
-async function deleteOneUser(filter: FilterQuery<User>): Promise<any> {
-    return await UserModel.deleteOne(filter);
+async function deleteOneUser(filter: any): Promise<any> {
+    return await prisma.user.deleteMany({ where: filter });
 }
 
-/**
- * @description Delete user by id
- * @param {string | mongoose.Types.ObjectId} id - User id
- * @returns {Promise<User | null>} - User object or null
- */
-async function deleteOneUserById(id: string | mongoose.Types.ObjectId): Promise<User | null> {
-    return await UserModel.findByIdAndDelete(id);
+async function deleteOneUserById(id: string): Promise<any | null> {
+    return await prisma.user.delete({ where: { id } });
 }
 
 export default {
