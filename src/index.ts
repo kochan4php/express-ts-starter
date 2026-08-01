@@ -18,7 +18,7 @@ import { logger } from './logger';
  * Bootstrap the application
  */
 (async function () {
-    const app: Application = init();
+    const app: Application = await init();
     const server = app.listen(PORT, () => logger.info('Server', `started on port ${PORT}`));
     const io: Server<DefaultEventsMap> = new Server(server, socketConfig());
     io.on('connection', (socket: Socket<DefaultEventsMap>) => SocketController(socket, io));

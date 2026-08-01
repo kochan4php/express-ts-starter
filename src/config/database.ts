@@ -12,12 +12,19 @@ const pool = new Pool({ connectionString: DATABASE_URL });
 const adapter = new PrismaPg(pool);
 export const prisma = new PrismaClient({ adapter });
 
-export default async function database(): Promise<void> {
-    try {
-        await prisma.$connect();
-        logger.info('Database', 'PostgreSQL Connected via Prisma');
-    } catch (error: any) {
-        logger.error('Database', error.message);
-        process.exit(1);
+export default async function database(retries = 5): Promise<void> {
+    while (retries > 0) {
+        try {
+            await prisma.$connect();
+            logger.info('Database', 'PostgreSQL Connected via Prisma');
+            return;
+        } catch (error: any) {
+            retries -= 1;
+            logger.error('Database', `Connection failed. Retries left: ${retries}. Error: ${error.message}`);
+            if (retries === 0) {
+                process.exit(1);
+            }
+            await new Promise((res) => setTimeout(res, 2000));
+        }
     }
 }

@@ -28,12 +28,12 @@ import mainRoute from './routes/main.route';
  * @description Init express application
  * @returns {Application} - Express application
  */
-const init = function (): Application {
+const init = async function (): Promise<Application> {
     // * Init express app
     const app: Application = express();
 
     // * Connect to database
-    database();
+    await database();
 
     // * Middlewares
     app.use(cors(corsConfig()));
