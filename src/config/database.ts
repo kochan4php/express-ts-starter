@@ -12,7 +12,7 @@ const pool = new Pool({ connectionString: DATABASE_URL });
 const adapter = new PrismaPg(pool);
 export const prisma = new PrismaClient({ adapter });
 
-export default async function database(retries = 5): Promise<void> {
+export default async function database(retries = 30): Promise<void> {
     while (retries > 0) {
         try {
             await prisma.$connect();
@@ -22,7 +22,8 @@ export default async function database(retries = 5): Promise<void> {
             retries -= 1;
             logger.error('Database', `Connection failed. Retries left: ${retries}. Error: ${error.message}`);
             if (retries === 0) {
-                process.exit(1);
+                logger.error('Database', 'Could not connect to database after maximum retries. The server will continue running but database queries will fail.');
+                return;
             }
             await new Promise((res) => setTimeout(res, 2000));
         }
