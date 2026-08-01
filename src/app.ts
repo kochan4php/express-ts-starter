@@ -12,6 +12,7 @@ import { rateLimit } from 'express-rate-limit';
 import morgan from 'morgan';
 import fs from 'fs';
 import path from 'path';
+import helmet from 'helmet';
 import { apiReference } from '@scalar/express-api-reference';
 import SwaggerParser from '@apidevtools/swagger-parser';
 import { resFailed } from './common/response';
@@ -37,6 +38,18 @@ const init = function (): Application {
     database();
 
     // * Middlewares
+    app.use(helmet({
+        contentSecurityPolicy: {
+            directives: {
+                defaultSrc: ["'self'"],
+                scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+                styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdn.jsdelivr.net", "https://fonts.scalar.com"],
+                fontSrc: ["'self'", "data:", "https://fonts.gstatic.com", "https://cdn.jsdelivr.net", "https://fonts.scalar.com"],
+                imgSrc: ["'self'", "data:", "https://cdn.jsdelivr.net"],
+            },
+        },
+    }));
+    app.disable('x-powered-by');
     app.use(cors(corsConfig()));
     app.use(rateLimit(limitterConfig()));
     app.use(cookieParser());

@@ -29,3 +29,12 @@ export const limitterConfig = (): Partial<Options> => ({
     statusCode: 429,
     message: 'Too many requests, please try again later.',
 });
+
+export const authLimitterConfig = (): Partial<Options> => ({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 10, // strict limit for login/register
+    standardHeaders: 'draft-7',
+    legacyHeaders: true,
+    statusCode: 429,
+    message: 'Too many authentication attempts, please try again later.',
+});

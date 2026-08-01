@@ -10,14 +10,18 @@ import { asyncHandler } from '../../common/utils/asyncHandler';
 import { validate } from '../../common/middlewares/validate.middleware';
 import { loginSchema, registerSchema } from './auth.dto';
 
+import { rateLimit } from 'express-rate-limit';
+import { authLimitterConfig } from '../../config/app';
+
 const router: Router = express.Router();
+const authLimiter = rateLimit(authLimitterConfig());
 
 const userService = new UserService(userRepository);
 const sessionService = new SessionService(sessionRepository);
 const authController = new AuthController(userService, sessionService);
 
-router.post('/login', validate(loginSchema), asyncHandler(authController.login.bind(authController)));
-router.post('/register', validate(registerSchema), asyncHandler(authController.register.bind(authController)));
+router.post('/login', authLimiter, validate(loginSchema), asyncHandler(authController.login.bind(authController)));
+router.post('/register', authLimiter, validate(registerSchema), asyncHandler(authController.register.bind(authController)));
 router.delete('/logout', asyncHandler(authController.logout.bind(authController)));
 router.get('/refresh-token', asyncHandler(authController.refreshToken.bind(authController)));
 
