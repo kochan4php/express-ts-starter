@@ -16,12 +16,17 @@ import { App } from './app';
 import { container } from './container';
 import { injectable, inject } from 'tsyringe';
 
+import { registerAbilities } from './common/authorization/abilities';
+
 @injectable()
 export class Bootstrap {
     constructor(@inject(App) private readonly app: App) {}
 
     public async start(): Promise<void> {
         try {
+            // Register authorization gates
+            registerAbilities();
+
             // 1. Establish database connection
             await database();
 

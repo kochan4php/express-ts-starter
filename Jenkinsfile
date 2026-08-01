@@ -15,9 +15,34 @@ pipeline {
             }
         }
 
+        stage('Secrets Scan') {
+            steps {
+                // Hard fail on any finding
+                sh 'docker run --rm -v "${WORKSPACE}:/path" zricethezav/gitleaks:latest detect --source="/path" -v'
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
                 sh 'pnpm install'
+            }
+        }
+
+        stage('Lint') {
+            steps {
+                sh 'pnpm run lint'
+            }
+        }
+
+        stage('SCA Scan') {
+            steps {
+                sh 'pnpm audit --audit-level=high'
+            }
+        }
+
+        stage('SAST') {
+            steps {
+                sh 'pnpm run sast'
             }
         }
 
@@ -35,6 +60,13 @@ pipeline {
             }
         }
 
+        stage('Container Image Scan') {
+            steps {
+                // Fail the build on HIGH/CRITICAL vulnerabilities
+                sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image --exit-code 1 --severity HIGH,CRITICAL ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${env.BUILD_ID}"
+            }
+        }
+
         stage('Push Image') {
             steps {
                 script {
@@ -46,18 +78,41 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
+        stage('Deploy to Staging') {
             steps {
                 withKubeConfig([credentialsId: K8S_CREDENTIALS_ID]) {
                     sh "sed -i 's|image: express_ts_starter:latest|image: ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${env.BUILD_ID}|g' k8s/deployment.yaml"
-                    sh 'kubectl apply -f k8s/configmap.yaml'
-                    sh 'kubectl apply -f k8s/secret.yaml'
-                    sh 'kubectl apply -f k8s/deployment.yaml'
-                    sh 'kubectl apply -f k8s/service.yaml'
-                    sh 'kubectl apply -f k8s/hpa.yaml'
+                    // Deploy to a staging namespace (assuming k8s manifests use namespace: staging or we apply it)
+                    sh 'kubectl apply -f k8s/configmap.yaml -n staging'
+                    sh 'kubectl apply -f k8s/secret.yaml -n staging'
+                    sh 'kubectl apply -f k8s/deployment.yaml -n staging'
+                    sh 'kubectl apply -f k8s/service.yaml -n staging'
+                    sh 'kubectl apply -f k8s/hpa.yaml -n staging'
                     
-                    // Wait for deployment to rollout
-                    sh 'kubectl rollout status deployment/express-ts-starter'
+                    sh 'kubectl rollout status deployment/express-ts-starter -n staging'
+                }
+            }
+        }
+
+        stage('DAST Scan') {
+            steps {
+                // OWASP ZAP Baseline Scan against the staging environment using OpenAPI spec
+                // Assume the service is exposed at http://express-ts-starter.staging.svc.cluster.local:3000
+                sh 'docker run -t owasp/zap2docker-stable zap-api-scan.py -t http://express-ts-starter.staging.svc.cluster.local:3000/docs/openapi.yaml -f openapi -l FAIL'
+            }
+        }
+
+        stage('Deploy to Production') {
+            steps {
+                withKubeConfig([credentialsId: K8S_CREDENTIALS_ID]) {
+                    // Deploy to production after passing DAST
+                    sh 'kubectl apply -f k8s/configmap.yaml -n production'
+                    sh 'kubectl apply -f k8s/secret.yaml -n production'
+                    sh 'kubectl apply -f k8s/deployment.yaml -n production'
+                    sh 'kubectl apply -f k8s/service.yaml -n production'
+                    sh 'kubectl apply -f k8s/hpa.yaml -n production'
+                    
+                    sh 'kubectl rollout status deployment/express-ts-starter -n production'
                 }
             }
         }
@@ -68,10 +123,10 @@ pipeline {
             cleanWs()
         }
         success {
-            echo 'Deployment successful!'
+            echo 'Deployment to production successful!'
         }
         failure {
-            echo 'Deployment failed!'
+            echo 'Pipeline failed!'
         }
     }
 }

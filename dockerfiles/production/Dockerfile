@@ -23,6 +23,8 @@ RUN npm pkg delete scripts.prepare
 RUN npm i --omit=dev
 RUN npx prisma generate
 COPY --from=builder /usr/src/app/dist ./dist
+RUN chown -R node:node /usr/src/app
+USER node
 EXPOSE 8000
 ENTRYPOINT [ "pm2-runtime" ]
 CMD [ "dist/server.js" ]

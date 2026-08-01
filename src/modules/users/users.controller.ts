@@ -13,7 +13,8 @@ export class UserController {
         try {
             const limit = typeof req.query.limit === 'number' ? req.query.limit : 10;
             const offset = typeof req.query.offset === 'number' ? req.query.offset : 0;
-            const users = await this.userService.getAllUsers({}, limit, offset);
+            const currentUser = (req as any).user;
+            const users = await this.userService.getAllUsers(currentUser, {}, limit, offset);
 
             if (!users.length) {
                 const message: string = 'Users empty';
@@ -31,7 +32,8 @@ export class UserController {
     public async getUserById(req: Request, res: Response): Promise<Response> {
         try {
             const { id } = req.params;
-            const user = await this.userService.getOneUserById(id as string);
+            const currentUser = (req as any).user;
+            const user = await this.userService.getOneUserById(currentUser, id as string);
 
             if (!user) {
                 const message: string = 'User not found';
@@ -71,7 +73,10 @@ export class UserController {
     public async updateUserById(req: Request, res: Response): Promise<Response> {
         try {
             const { id } = req.params;
-            const isExistsUser = await this.userService.getOneUserById(id as string);
+            const currentUser = (req as any).user;
+            // The service will throw ForbiddenError if not authorized, but we also check existence inside service.
+            // Since `getOneUserById` checks admin, we might need a separate method for existence check or pass currentUser.
+            const isExistsUser = await this.userService.getOneUserById({role: 'admin'}, id as string); // Bypass to check existence
 
             if (!isExistsUser) {
                 const message: string = 'User not found';
@@ -80,7 +85,7 @@ export class UserController {
 
             const { name, phoneNumber, email } = req.body;
             const data = { name, phoneNumber, email };
-            const user = await this.userService.updateOneUserById(id as string, data);
+            const user = await this.userService.updateOneUserById(currentUser, id as string, data);
 
             const message: string = 'Success update user by id';
             return resSuccess(res, 200, message, { user });
@@ -93,14 +98,15 @@ export class UserController {
     public async deleteUserById(req: Request, res: Response): Promise<Response> {
         try {
             const { id } = req.params;
-            const isExistsUser = await this.userService.getOneUserById(id as string);
+            const currentUser = (req as any).user;
+            const isExistsUser = await this.userService.getOneUserById({role: 'admin'}, id as string);
 
             if (!isExistsUser) {
                 const message: string = 'User not found';
                 return resFailed(res, 404, message);
             }
 
-            await this.userService.deleteOneUserById(id as string);
+            await this.userService.deleteOneUserById(currentUser, id as string);
 
             const message: string = 'Success delete user by id';
             return resSuccess(res, 200, message);
