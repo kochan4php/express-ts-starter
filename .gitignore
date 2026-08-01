@@ -5,3 +5,7 @@ env/.env.production*
 env/.env.staging
 env/.env.development
 env/.env.testing
+package-lock.json
+pnpm-lock.yaml
+pnpm-workspace.yaml
+yarn.lock
